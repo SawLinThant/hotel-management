@@ -117,7 +117,7 @@ const CreateUser = () => {
             <div className="h-12 w-full flex flow-row gap-4 items-center justify-start">
               <button
                 type="submit"
-                className="transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l"
+                className="transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l flex flex-row items-center justify-center"
               >
                 {createCustomerLoading ? <LoadingButton size={20} /> : "Create"}
               </button>

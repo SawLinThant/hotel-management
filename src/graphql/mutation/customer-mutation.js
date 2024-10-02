@@ -34,6 +34,7 @@ export const UPDATE_CUSTOMER_BY_ID = gql`
     $email: String
     $disabled: Boolean
     $unique_password: String
+    $hotel_group: String
   ) {
     update_customers_by_pk(
       pk_columns: { id: $id }
@@ -43,6 +44,7 @@ export const UPDATE_CUSTOMER_BY_ID = gql`
         phone: $phone
         email: $email
         disabled: $disabled
+        hotel_group: $hotel_group
       }
     ) {
       id

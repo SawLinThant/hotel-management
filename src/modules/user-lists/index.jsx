@@ -4,7 +4,7 @@ import { userColumn } from "../common/components/custom-table/columns";
 import CustomFilter from "../common/components/custom-filter";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery,useLazyQuery } from "@apollo/client";
-import { GET_CUSTOMERS, GET_CUSTOMERS_BY_STATUS } from "../../graphql/query/customer-query";
+import { GET_CUSTOMERS, GET_CUSTOMERS_BY_HOTEL_GROUP, GET_CUSTOMERS_BY_STATUS, GET_CUSTOMERS_BY_STATUS_AND_HOTEL_GROUP } from "../../graphql/query/customer-query";
 import nProgress from "nprogress";
 import { customerFilterOptions } from "../../lib/config";
 import { useAccount } from "../../lib/context/account-context";
@@ -14,13 +14,17 @@ const UserList = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const {userType} = useAccount();
-  
+
   const [getCustomers,{
     data: customerList,
     loading: fetchCustomerList,
     error: fetchCustomerError,
     refetch: customerRefetch
-  }] = useLazyQuery(GET_CUSTOMERS);
+  }] = useLazyQuery(GET_CUSTOMERS_BY_HOTEL_GROUP,{
+    variables: {
+      hotelGroup:userType
+    }
+  });
   const [pagination, setPagination] = useState(1);
   const itemsPerPage = 5;
 
@@ -32,7 +36,7 @@ const UserList = () => {
 
   console.log(filter)
 
-  const [getCustomersByStatus,{data:customerListByStatus,loading:fetchCustomerListByStatus}] = useLazyQuery(GET_CUSTOMERS_BY_STATUS)
+  const [getCustomersByStatus,{data:customerListByStatus,loading:fetchCustomerListByStatus}] = useLazyQuery(GET_CUSTOMERS_BY_STATUS_AND_HOTEL_GROUP)
   const customerLists = customerList ? customerList.customers : [];
   console.log(customerLists)
 
@@ -43,12 +47,18 @@ const UserList = () => {
         getCustomers();
     }else if(filter === 'enable'){
        getCustomersByStatus({
-        variables:{disabled:false}
+        variables:{
+          disabled:false,
+          hotelGroup:userType
+        }
        })
     }
     else{
         getCustomersByStatus({
-            variables:{disabled:true}
+          variables:{
+            disabled:true,
+            hotelGroup:userType
+          }
            })
     }
   },[filter,getCustomers,getCustomersByStatus])

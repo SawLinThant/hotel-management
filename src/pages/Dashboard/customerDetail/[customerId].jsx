@@ -58,6 +58,7 @@ const CustomerDetail = () => {
     created_at: "",
     updated_at: "",
     disabled: "",
+    hotel_group:"",
     unique_password: "",
     cards: {
       id: "",
@@ -108,6 +109,7 @@ const CustomerDetail = () => {
           phone: customerData.phone,
           email: customerData.email,
           disabled: customerData.disabled,
+          hotel_group: customerData.hotel_group
         },
       });
       toast.success("Saved changes");

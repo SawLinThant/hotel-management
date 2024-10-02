@@ -15,6 +15,26 @@ export const GET_CUSTOMERS = gql`
       updated_at
       disabled
       unique_password
+      hotel_group
+    }
+  }
+`;
+
+export const GET_CUSTOMERS_BY_HOTEL_GROUP = gql`
+  query getCustomersByHotelGroup($hotelGroup: String!) {
+    customers (
+    where:{hotel_group:{_eq:$hotelGroup}}
+    order_by: { created_at: desc }
+    ){
+      id
+      name
+      phone
+      email
+      created_at
+      updated_at
+      disabled
+      unique_password
+      hotel_group
     }
   }
 `;
@@ -29,6 +49,7 @@ export const GET_CUSTOMERS_BY_ID = gql`
       created_at
       updated_at
       disabled
+      hotel_group
       unique_password
        cards{
         id
@@ -51,6 +72,28 @@ export const GET_CUSTOMERS_BY_STATUS = gql`
       updated_at
       disabled
       unique_password
+      hotel_group
+    }
+  }
+`;
+
+export const GET_CUSTOMERS_BY_STATUS_AND_HOTEL_GROUP = gql`
+  query getCustomersByStatus($disabled: Boolean!, $hotelGroup: String!) {
+    customers(
+      where: { 
+        disabled: { _eq: $disabled },
+        hotel_group: { _eq: $hotelGroup }
+      }
+    ) {
+      id
+      name
+      phone
+      email
+      created_at
+      updated_at
+      disabled
+      unique_password
+      hotel_group
     }
   }
 `;
