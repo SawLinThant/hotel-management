@@ -30,6 +30,36 @@ export const GET_CARDS_TRANSACTION = gql`
   }
 `;
 
+export const GET_CARDS_TRANSACTION_BY_HOTEL_GROUP = gql`
+  query getCardTransaction($hotelGroup: String!) {
+    card_transactions(
+      where: { card: { hotel_group: { _eq: $hotelGroup } } }
+      order_by: { created_at: desc }
+    ) {
+      id
+      transaction_number
+      amount
+      terminal_id
+      card_id
+      card_transaction_type
+      created_at
+      updated_at
+      card {
+        id
+        card_number
+        hotel_group
+        customer {
+          id
+          name
+        }
+      }
+      terminal {
+        terminal_number
+      }
+    }
+  }
+`;
+
 export const GET_CARDS_TRANSACTION_BY_ID = gql`
    query getCardTransactionById($id: uuid!) {
     card_transactions(where: { id: { _eq: $id } }) {
@@ -77,6 +107,7 @@ export const GET_CARDS_TRANSACTION_SEVENDAYS = gql`
         customer{
           id
           name
+          hotel_group
         }
       }
     }

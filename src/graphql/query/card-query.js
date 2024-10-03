@@ -18,6 +18,28 @@ export const GET_CARDS = gql`
   }
 `;
 
+export const GET_CARDS_BY_HOTEL_GROUP = gql`
+  query getCards($hotelGroup: String!) {
+    cards (
+     where: { hotel_group: { _eq: $hotelGroup } }
+    order_by: { created_at: desc }
+    ){
+      id
+      card_number
+      card_password
+      created_at
+      updated_at
+      disabled
+      balance
+      hotel_group
+      customer{
+        id
+        name
+      }
+    }
+  }
+`;
+
 export const GET_CARDS_BY_ID = gql`
    query getCardsById($id: uuid!) {
     cards(where: { id: { _eq: $id } }) {
@@ -28,6 +50,7 @@ export const GET_CARDS_BY_ID = gql`
       updated_at
       disabled
       balance
+      hotel_group
       customer{
         id
         name

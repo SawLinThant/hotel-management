@@ -4,11 +4,13 @@ export const CREATE_CARD = gql`
   mutation createCard(
     $card_number: String
     $card_password: String
+    $hotel_group: String
   ) {
     insert_cards_one(
       object: {
         card_number: $card_number
         card_password: $card_password
+        hotel_group: $hotel_group
       }
     ) {
       card_number
@@ -17,6 +19,7 @@ export const CREATE_CARD = gql`
       updated_at
       disabled
       balance
+      hotel_group
     }
   }
 `;
@@ -45,6 +48,7 @@ export const UPDATE_CARD_BY_ID = gql`
     $card_password: String
     $balance: numeric
     $disabled: Boolean
+    $hotel_group: String
   ) {
     update_cards_by_pk(
       pk_columns: { id: $id },
@@ -53,6 +57,7 @@ export const UPDATE_CARD_BY_ID = gql`
         card_password: $card_password,
         balance: $balance,
         disabled: $disabled
+        hotel_group: $hotel_group
       }
     ) {
       id
@@ -61,6 +66,7 @@ export const UPDATE_CARD_BY_ID = gql`
       balance
       disabled
       updated_at
+      hotel_group
     }
   }
 `;

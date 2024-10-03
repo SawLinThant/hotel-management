@@ -28,6 +28,7 @@ const CardDetail = () => {
     balance:"",
     disabled:"",
     updated_at:"",
+    hotel_group:"",
     customer:{
       id: "",
       name: ""
@@ -80,6 +81,7 @@ const CardDetail = () => {
           card_password:cardData.card_password,
           balance: cardData.balance,
           disabled: cardData.disabled,
+          hotel_group:cardData.hotel_group,
         },
       });
       toast.success("Saved changes");

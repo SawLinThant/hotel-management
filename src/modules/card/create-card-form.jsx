@@ -7,9 +7,11 @@ import { useState } from "react";
 import LoadingButton from "../common/icon/loading-icon";
 import toast, { Toaster } from "react-hot-toast";
 import bcrypt from 'bcryptjs';
+import { useAccount } from "../../lib/context/account-context";
 
 const CreateCard = () => {
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const {
     register: cardRegister,
     handleSubmit: createCardSubmit,
@@ -24,6 +26,7 @@ const CreateCard = () => {
           variables: {
             card_number: credentials.card_number,
             card_password: "",
+            hotel_group: userType,
           },
         });
         toast.success("Card created successfully");

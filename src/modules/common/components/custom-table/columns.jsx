@@ -55,7 +55,7 @@ export const cardColumn = (navigate,pagination, itemsPerPage) => [
     header: () => <span className="">Card Number</span>,
   }),
   columnHelper.accessor("customer", {
-    cell: (info) => <span>{info.getValue().name}</span>,
+    cell: (info) => <span>{info.getValue()?info.getValue().name:"Unregistered"}</span>,
     header: () => <span className="">Customer</span>,
   }),
   columnHelper.accessor("disabled", {

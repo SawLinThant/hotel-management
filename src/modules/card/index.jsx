@@ -4,21 +4,27 @@ import {cardColumn } from "../common/components/custom-table/columns";
 import CustomFilter from "../common/components/custom-filter";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery,useLazyQuery } from "@apollo/client";
-import { GET_CARDS} from "../../graphql/query/card-query";
+import { GET_CARDS, GET_CARDS_BY_HOTEL_GROUP} from "../../graphql/query/card-query";
 import nProgress from "nprogress";
 import { cardFilterOptions } from "../../lib/config";
 import { GET_CARDS_BY_STATUS } from "../../graphql/query/card-query";
+import { useAccount } from "../../lib/context/account-context";
 
 const CardList = () => {
   const [filter, setFilter] = useState('all');
   const navigate = useNavigate();
   const location = useLocation();
+  const {userType} = useAccount();
   const [getCards,{
     data: cardList,
     loading: fetchCardList,
     error: fetchCardError,
     refetch: cardRefetch
-  }] = useLazyQuery(GET_CARDS);
+  }] = useLazyQuery(GET_CARDS_BY_HOTEL_GROUP,{
+    variables: {
+      hotelGroup:userType
+    }
+  });
   const [pagination, setPagination] = useState(1);
   const itemsPerPage = 5;
 

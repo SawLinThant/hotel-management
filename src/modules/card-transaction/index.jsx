@@ -4,14 +4,16 @@ import { cardTransactionColumn } from "../common/components/custom-table/columns
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import nProgress from "nprogress";
-import { GET_CARDS_TRANSACTION, GET_CARDS_TRANSACTION_BY_CARD_NUMBER, GET_CARDS_TRANSACTION_BY_TYPE } from "../../graphql/query/card-transaction-query";
+import { GET_CARDS_TRANSACTION, GET_CARDS_TRANSACTION_BY_CARD_NUMBER, GET_CARDS_TRANSACTION_BY_HOTEL_GROUP, GET_CARDS_TRANSACTION_BY_TYPE } from "../../graphql/query/card-transaction-query";
 import CustomFilter from "../common/components/custom-filter";
 import { transactionFilterOptions } from "../../lib/config";
 import toast, { Toaster } from "react-hot-toast";
+import { useAccount } from "../../lib/context/account-context";
 
 const CardTransactionList = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const {userType} = useAccount();
   const [filter, setFilter] = useState('');
   const [pagination, setPagination] = useState(1);
   const [cardNumberSearch, setCardNumberSearch] = useState('');
@@ -22,7 +24,11 @@ const CardTransactionList = () => {
     loading: fetchCardTransactionList,
     error: fetchCardTransactionError,
     refetch: transactionRefetch
-  }] = useLazyQuery(GET_CARDS_TRANSACTION);
+  }] = useLazyQuery(GET_CARDS_TRANSACTION_BY_HOTEL_GROUP,{
+    variables: {
+      hotelGroup:userType
+    }
+  });
 
   const [getTransactionByCardNumber, {
     data: transactionByCardNumber,
