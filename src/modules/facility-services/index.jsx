@@ -4,16 +4,22 @@ import { facilityServiceColumn } from "../common/components/custom-table/columns
 import { useNavigate } from "react-router-dom";
 import { useQuery,useLazyQuery } from "@apollo/client";
 import nProgress from "nprogress";
-import { GET_FACILITY_SERIVCES } from "../../graphql/query/facilities-services-query";
+import { GET_FACILITY_SERIVCES, GET_FACILITY_SERIVCES_BY_HOTEL_GROUP } from "../../graphql/query/facilities-services-query";
+import { useAccount } from "../../lib/context/account-context";
 
 const FacilityServiceList = () => {
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const {
     data: facilityServiceList,
     loading: fetchFacilityServiceList,
     error: fetchFacilityServiceError,
     refetch: customerRefetch
-  } = useQuery(GET_FACILITY_SERIVCES);
+  } = useQuery(GET_FACILITY_SERIVCES_BY_HOTEL_GROUP,{
+    variables: {
+      hotelGroup:userType
+    }
+  });
   const [pagination, setPagination] = useState(1);
   const itemsPerPage = 5;
 

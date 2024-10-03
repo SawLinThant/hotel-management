@@ -7,6 +7,7 @@ export const CREATE_CUSTOMER = gql`
       $email: String
       $disabled: Boolean
       $unique_password: String
+      $hotel_group: String
     ){
         insert_customers_one(
           object:{
@@ -15,6 +16,7 @@ export const CREATE_CUSTOMER = gql`
            email: $email
            disabled: $disabled
            unique_password: $unique_password
+           hotel_group: $hotel_group
           }
         ){
             name
@@ -22,6 +24,7 @@ export const CREATE_CUSTOMER = gql`
             email
             disabled
             unique_password
+            hotel_group
         }
     }
 ` 
@@ -53,6 +56,7 @@ export const UPDATE_CUSTOMER_BY_ID = gql`
       email
       disabled
       unique_password
+      hotel_group
     }
   }
 `;

@@ -35,6 +35,7 @@ const TerminalDetail = () => {
     disabled: "",
     created_at: "",
     updated_at: "",
+    hotel_group:"",
     facility: {
       id: "",
       name: "",
@@ -100,6 +101,7 @@ const TerminalDetail = () => {
           password: terminalData.password,
           facility_id: terminalData.facility_id,
           disabled: terminalData.disabled,
+          hotel_group: terminalData.hotel_group
         },
       });
       toast.success("Saved changes");

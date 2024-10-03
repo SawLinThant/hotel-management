@@ -6,6 +6,7 @@ export const CREATE_FACILITY = gql`
       $phone:String
       $email:String
       $establishment_id:uuid
+      $hotel_group: String
     ){
         insert_facilities_one(
           object:{
@@ -13,6 +14,7 @@ export const CREATE_FACILITY = gql`
            phone: $phone
            email: $email
            establishment_id:$establishment_id
+           hotel_group: $hotel_group
           }
         ){
             name
@@ -21,6 +23,7 @@ export const CREATE_FACILITY = gql`
             created_at
             updated_at
             establishment_id
+            hotel_group
         }
     }
 ` ;
@@ -32,6 +35,7 @@ export const UPDATE_FACILITY_BY_ID = gql`
     $phone: String
     $email: String
     $establishment_id: uuid
+    $hotel_group: String
   ) {
     update_facilities(
       where: { id: { _eq: $id } },
@@ -40,6 +44,7 @@ export const UPDATE_FACILITY_BY_ID = gql`
         phone: $phone
         email: $email
         establishment_id: $establishment_id
+        hotel_group: $hotel_group
       }
     ) {
       returning {
@@ -49,6 +54,7 @@ export const UPDATE_FACILITY_BY_ID = gql`
         email
         updated_at
         establishment_id
+        hotel_group
       }
     }
   }

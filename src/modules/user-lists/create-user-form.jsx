@@ -6,9 +6,11 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import LoadingButton from "../common/icon/loading-icon";
 import toast, { Toaster } from "react-hot-toast";
+import { useAccount } from "../../lib/context/account-context";
 
 const CreateUser = () => {
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const [uniquePassword, setUniquePassword] = useState();
   const {
     register: customerRegister,
@@ -30,6 +32,7 @@ const CreateUser = () => {
             email: credentials.email,
             disabled: false,
             unique_password: "",
+            hotel_group: userType
           },
         });
         toast.success("Customer created successfully");

@@ -11,9 +11,11 @@ import toast, { Toaster } from "react-hot-toast";
 import LoadingButton from "../../../modules/common/icon/loading-icon";
 import { GET_FACILITY_SERVICE_BY_ID } from "../../../graphql/query/facilities-services-query";
 import { DELETE_FACILITY_SERVICE, UPDATE_FACILITY_SERVICE } from "../../../graphql/mutation/facility-service-mutation";
+import { useAccount } from "../../../lib/context/account-context";
 
 const FacilityServiceDetail = () => {
   const { facilityServiceId } = useParams();
+  const {userType} = useAccount();
   const navigate = useNavigate();
   const [isEdit, setisEdit] = useState(false);
   const [facility, setFacility] = useState();
@@ -32,6 +34,7 @@ const FacilityServiceDetail = () => {
     facility_id: "",
     created_at: "",
     updated_at: "",
+    hotel_group:"",
     facility: {
       id: "",
       name: "",
@@ -93,6 +96,7 @@ const FacilityServiceDetail = () => {
           name: facilityServiceData.name,
           price: facilityServiceData.price,
           facility_id: facilityServiceData.facility_id,
+          hotel_group: facilityServiceData.hotel_group,
         },
       });
       toast.success("Saved changes");
@@ -125,7 +129,7 @@ const FacilityServiceDetail = () => {
     }
   };
 
-  if (fetchFacilityServicebyId) return <div></div>;
+  if (fetchFacilityServicebyId) return <div className="w-full h-[60vh] flex items-center justify-center">Loading...</div>;
 
   return (
     <div className="w-full flex flex-col gap-4 pr-5 pl-5 text-primary">

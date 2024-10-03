@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 import LoadingButton from "../common/icon/loading-icon";
 import toast, { Toaster } from "react-hot-toast";
 import { CREATE_CASHIN_AMOUNT } from "../../graphql/mutation/cashin-mutation";
+import { useAccount } from "../../lib/context/account-context";
 
 const CreateCashinAmount = () => {
   const navigate = useNavigate();
-
+  const {userType} = useAccount();
   const {
     register: cashinAmountRegister,
     handleSubmit: createCashinAmountSubmit,
@@ -23,6 +24,7 @@ const CreateCashinAmount = () => {
       await createCashinAmount({
         variables: {
           amount: credentials.amount,
+          hotel_group: userType,
         },
       });
       toast.success("Cash In Amount created");
@@ -63,7 +65,7 @@ const CreateCashinAmount = () => {
             <div className="h-12 w-full flex flow-row gap-4 items-center justify-between">
               <button
                 type="submit"
-                className="transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l"
+                className="transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l flex flex-row items-center justify-center"
               >
                 {createCashinAmountLoading ? <LoadingButton size={20} /> : "Create"}
               </button>

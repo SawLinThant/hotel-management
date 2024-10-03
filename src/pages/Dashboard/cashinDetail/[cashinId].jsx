@@ -28,6 +28,7 @@ const CashinDetail = () => {
     amount: "",
     created_at: "",
     updated_at: "",
+    hotel_group:"",
   });
 
   useEffect(() => {
@@ -79,7 +80,8 @@ const CashinDetail = () => {
         variables: {
           id: cashinData.id,
           amount: cashinData.amount,
-          updated_at: Date.now()
+          updated_at: Date.now(),
+          hotel_group:cashinData.hotel_group,
         },
       });
       toast.success("Saved changes");

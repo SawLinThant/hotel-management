@@ -29,6 +29,7 @@ const FacilityDetail = () => {
     phone: "",
     email: "",
     establishment_id: "",
+    hotel_group:"",
     establishment:{
         id:"",
         name:"",
@@ -94,6 +95,7 @@ const FacilityDetail = () => {
           phone: facilityData.phone,
           email: facilityData.email,
           establishment_id: facilityData. establishment_id,
+          hotel_group:facilityData.hotel_group,
         },
       });
       toast.success("Saved changes");

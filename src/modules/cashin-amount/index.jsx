@@ -4,16 +4,22 @@ import { cashinColumn } from "../common/components/custom-table/columns";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import nProgress from "nprogress";
-import { GET_CASHIN_AMOUNT } from "../../graphql/query/cash-in-query";
+import { GET_CASHIN_AMOUNT, GET_CASHIN_AMOUNT_BY_HOTEL_GROUP } from "../../graphql/query/cash-in-query";
+import { useAccount } from "../../lib/context/account-context";
 
 const CashinList = () => {
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const {
     data: cashinList,
     loading: fetchCashinList,
     error: fetchCashinError,
     refetch: cashinRefetch
-  } = useQuery(GET_CASHIN_AMOUNT);
+  } = useQuery(GET_CASHIN_AMOUNT_BY_HOTEL_GROUP,{
+    variables: {
+      hotelGroup:userType
+    }
+  });
   const [pagination, setPagination] = useState(1);
   const itemsPerPage = 5;
 

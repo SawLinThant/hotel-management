@@ -8,9 +8,11 @@ import toast, { Toaster } from "react-hot-toast";
 import { CREATE_FACILITY } from "../../graphql/mutation/facility-mutation";
 import { GET_ESTABLISHMENT } from "../../graphql/query/establishment-query";
 import CustomDropdown from "../common/components/custom-dropdown";
+import { useAccount } from "../../lib/context/account-context";
 
 const CreateFacility = () => {
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const [establishment, setEstablishment] = useState();
   const [establishmentOptions, setEstablishmentOptions] = useState();
   const {
@@ -44,6 +46,7 @@ const CreateFacility = () => {
             phone: credentials.phone,
             email: credentials.email,
             establishment_id: establishment,
+            hotel_group: userType
           },
         });
         toast.success("Facility created successfully");

@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import LoadingButton from "../common/icon/loading-icon";
 import toast, { Toaster } from "react-hot-toast";
 import CustomDropdown from "../common/components/custom-dropdown";
-import { GET_FACILITIES } from "../../graphql/query/facilities-query";
+import { GET_FACILITIES, GET_FACILITIES_BY_HOTEL_GROUP } from "../../graphql/query/facilities-query";
 import { CREATE_FACILITY_SERVICE } from "../../graphql/mutation/facility-service-mutation";
+import { useAccount } from "../../lib/context/account-context";
 
 const CreateFacilityService = () => {
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const [facility, setFacility] = useState();
   const [facilityOptions, setFacilityOptions] = useState();
   const {
@@ -25,7 +27,11 @@ const CreateFacilityService = () => {
     data: getFacility,
     loading: fetchFacility,
     error: fetchFacilityError,
-  } = useQuery(GET_FACILITIES);
+  } = useQuery(GET_FACILITIES_BY_HOTEL_GROUP,{
+    variables: {
+      hotelGroup:userType
+    }
+  });
 
   useEffect(() => {
     if (getFacility && getFacility.facilities) {
@@ -44,6 +50,7 @@ const CreateFacilityService = () => {
               name: credentials.name,
               price: credentials.price,
               facility_id: facility,
+              hotel_group: userType,
             },
           });
           toast.success("Service created successfully");
@@ -102,7 +109,7 @@ const CreateFacilityService = () => {
             <div className="h-12 w-full flex flow-row gap-4 items-center justify-start">
               <button
                 type="submit"
-                className="transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l"
+                className="transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l flex flex-row items-center justify-center"
               >
                 {createFacilityServiceLoading ? (
                   <LoadingButton size={20} />

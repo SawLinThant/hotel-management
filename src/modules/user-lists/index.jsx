@@ -26,7 +26,7 @@ const UserList = () => {
     }
   });
   const [pagination, setPagination] = useState(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 10;
 
   useEffect(() => {
     if (location.state?.refetch) {

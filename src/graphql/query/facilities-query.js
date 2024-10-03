@@ -2,7 +2,7 @@ import { gql } from "@apollo/client";
 
 export const GET_FACILITIES = gql`
   query getFacilities {
-    facilities (order_by: { created_at: desc }){
+    facilities(order_by: { created_at: desc }) {
       id
       name
       phone
@@ -10,6 +10,24 @@ export const GET_FACILITIES = gql`
       created_at
       updated_at
       establishment_id
+    }
+  }
+`;
+
+export const GET_FACILITIES_BY_HOTEL_GROUP = gql`
+  query getFacilities($hotelGroup: String!) {
+    facilities(
+      where: { hotel_group: { _eq: $hotelGroup } }
+      order_by: { created_at: desc }
+    ) {
+      id
+      name
+      phone
+      email
+      created_at
+      updated_at
+      establishment_id
+      hotel_group
     }
   }
 `;
@@ -24,7 +42,8 @@ export const GET_FACILITY_BY_ID = gql`
       created_at
       updated_at
       establishment_id
-      establishment{
+      hotel_group
+      establishment {
         id
         name
       }

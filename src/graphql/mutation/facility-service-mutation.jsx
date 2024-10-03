@@ -5,9 +5,10 @@ export const CREATE_FACILITY_SERVICE = gql`
     $name: String
     $price: numeric
     $facility_id: uuid
+    $hotel_group: String
   ) {
     insert_facility_services_one(
-      object: { name: $name, price: $price, facility_id: $facility_id }
+      object: { name: $name, price: $price, facility_id: $facility_id,  hotel_group: $hotel_group}
     ) {
       id
       name
@@ -15,6 +16,7 @@ export const CREATE_FACILITY_SERVICE = gql`
       facility_id
       created_at
       updated_at
+      hotel_group
     }
   }
 `;
@@ -25,10 +27,11 @@ export const UPDATE_FACILITY_SERVICE = gql`
     $name: String
     $price: numeric
     $facility_id: uuid
+    $hotel_group: String
   ) {
     update_facility_services_by_pk(
       pk_columns: { id: $id }
-      _set: { name: $name, price: $price, facility_id: $facility_id }
+      _set: { name: $name, price: $price, facility_id: $facility_id, hotel_group: $hotel_group }
     ) {
       id
       name
@@ -36,6 +39,7 @@ export const UPDATE_FACILITY_SERVICE = gql`
       facility_id
       created_at
       updated_at
+      hotel_group
     }
   }
 `;
