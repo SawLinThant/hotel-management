@@ -76,7 +76,7 @@ export const masterAdminUserColumn = (navigate,pagination, itemsPerPage) => [
         className="flex w-full flex-row items-center justify-center gap-2 border-none bg-transparent hover:cursor-pointer text-blue-500"
         onClick={() => {
           navigate(
-            `/masteradmindashboard/customerlists/customerdetail/${info.getValue()}`
+            `/masteradmindashboard/customer/customerdetail/${info.getValue()}`
           );
         }}
       >
@@ -302,7 +302,7 @@ export const masterAdminFacilityServiceColumn = (navigate,pagination, itemsPerPa
         className="flex w-full flex-row items-center justify-center gap-2 border-none bg-transparent hover:cursor-pointer text-blue-500"
         onClick={() => {
           navigate(
-            `/masteradmindashboard/facilityservicelists/facilityservicedetail/${info.getValue()}`
+            `/masteradmindashboard/facilityservice/facilityservicedetail/${info.getValue()}`
           );
         }}
       >
@@ -388,7 +388,7 @@ export const masterAdminTerminalColumn = (navigate,pagination, itemsPerPage) => 
         className="flex w-full flex-row items-center justify-center gap-2 border-none bg-transparent hover:cursor-pointer text-blue-500"
         onClick={() => {
           navigate(
-            `/masteradmindashboard/terminallists/terminaldetail/${info.getValue()}`
+            `/masteradmindashboard/terminal/terminaldetail/${info.getValue()}`
           );
         }}
       >
@@ -546,7 +546,7 @@ export const masterAdminCardTransactionColumn = (navigate,pagination, itemsPerPa
         className="flex w-full flex-row items-center justify-center gap-2 border-none bg-transparent hover:cursor-pointer text-blue-500"
         onClick={() => {
           navigate(
-            `/masteradmindashboard/cardtransactionlists/cardtransactiondetail/${info.getValue()}`
+            `/masteradmindashboard/cardtransaction/cardtransactiondetail/${info.getValue()}`
           );
         }}
       >

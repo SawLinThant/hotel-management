@@ -111,7 +111,7 @@ const FacilityDetail = () => {
       variables: { id: facilityId },
       onCompleted: () => {
         toast.success("Deleted successfully");
-        navigate("/dashboard/facility",{ state: { refetch: true } });
+        navigate("/masteradmindashboard/facility",{ state: { refetch: true } });
       },
       onError: (error) => {
         console.error("Failed to delete faclility:", error);
@@ -139,7 +139,7 @@ const FacilityDetail = () => {
             <div className="w-full h-full flex flex-col gap-4">
               <div className="w-full h-[4rem] flex flex-row items-center p-4 justify-between rounded-t rounded-tr bg-gradient-to-r from-primary to-primarybold">
                 <button
-                  onClick={() => navigate("/dashboard/facility",{ state: { refetch: true } })}
+                  onClick={() => navigate("/masteradmindashboard/facility",{ state: { refetch: true } })}
                   className="bg-transparent"
                 >
                   <FaArrowLeft size={20} color="white" />

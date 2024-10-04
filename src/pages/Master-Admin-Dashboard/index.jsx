@@ -18,6 +18,14 @@ import CreateCashinAmount from "../../modules/master-admin/cashin-amount/create-
 import FacilityList from "../../modules/master-admin/facility";
 import FacilityDetail from "./facilityDetail/[facilityId]";
 import CreateFacility from "../../modules/master-admin/facility/create-facility-form";
+import FacilityServiceList from "../../modules/master-admin/facility-service";
+import CreateFacilityService from "../../modules/master-admin/facility-service/create-facility-service-form";
+import FacilityServiceDetail from "./facilityServiceDetail/[facilityServiceid]";
+import TerminalList from "../../modules/master-admin/terminal";
+import TerminalDetail from "./terminalDetail/[terminalId]";
+import CreateTerminal from "../../modules/master-admin/terminal/create-terminal";
+import CardTransactionList from "../../modules/master-admin/card-transaction";
+import CardTransactionDetail from "./cardTransactionDetail/[cardTransactionId]";
 
 const MasterAdminDashboard = () => {
   const location = useLocation();
@@ -76,8 +84,8 @@ const MasterAdminDashboard = () => {
           </div>
           <div id="progress-bar-container" className="flex-1 mt-[6rem] h-[calc(100% - 6rem)] overflow-y-auto w-full bg-white relative">
             <Routes>
-              <Route path="*" element={<AdminUserList/>} />
-              <Route path="customerlists/customerdetail/:customerId" element={<CustomerDetail/>} />
+              <Route path="customer" element={<AdminUserList/>} />
+              <Route path="customer/customerdetail/:customerId" element={<CustomerDetail/>} />
               <Route path="customer/createcustomer" element={<CreateUser/>} />
 
               <Route path="card" element={<CardList/>} />
@@ -91,6 +99,18 @@ const MasterAdminDashboard = () => {
               <Route path="facility" element={<FacilityList/>} />
               <Route path="facility/facilitydetail/:facilityId" element={<FacilityDetail/>} />
               <Route path="facility/createfacility" element={<CreateFacility/>} />
+
+              <Route path="facilityservice" element={<FacilityServiceList/>} />
+              <Route path="facilityservice/facilityservicedetail/:facilityServiceId" element={<FacilityServiceDetail/>} />
+              <Route path="facilityservice/createfacilityservice" element={<CreateFacilityService/>} />
+
+              <Route path="terminal" element={<TerminalList/>} />
+              <Route path="terminal/terminaldetail/:terminalId" element={<TerminalDetail/>} />
+              <Route path="terminal/createterminal" element={<CreateTerminal/>} />
+
+              
+              <Route path="*" element={<CardTransactionList/>} />
+              <Route path="cardtransaction/cardtransactiodetail/:cardTransactioId" element={<CardTransactionDetail/>} />
             </Routes>
           </div>
         </div>
