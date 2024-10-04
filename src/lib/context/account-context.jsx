@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 const AccountContext = createContext();
 
 export const AccountProvider = ({children}) => {
-   const [userType,setUserType] = useState("Axra");
+   const [userType,setUserType] = useState("admin");
 
    const SetUserType = ((userType) => {
     setUserType(userType);

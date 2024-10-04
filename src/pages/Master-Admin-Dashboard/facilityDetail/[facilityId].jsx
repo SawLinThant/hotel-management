@@ -128,7 +128,7 @@ const FacilityDetail = () => {
     }
   };
 
-  if (fetchFacilitybyId) return <div className="mt-10">Loading</div>;
+  if (fetchFacilitybyId) return <div className="mt-10">Loading...</div>;
 
   return (
     <div className="w-full flex flex-col gap-4 pr-5 pl-5 text-primary">

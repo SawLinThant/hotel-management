@@ -1,30 +1,24 @@
 import { useEffect, useState } from "react";
-import CustomTable from "../common/components/custom-table";
-import { cardColumn} from "../common/components/custom-table/columns";
-import CustomFilter from "../common/components/custom-filter";
+import CustomTable from "../../common/components/custom-table";
+import {cardColumn, masterAdminCardColumn } from "../../common/components/custom-table/columns";
+import CustomFilter from "../../common/components/custom-filter";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery,useLazyQuery } from "@apollo/client";
-import { GET_CARDS, GET_CARDS_BY_HOTEL_GROUP} from "../../graphql/query/card-query";
+import { GET_CARDS} from "../../../graphql/query/card-query";
 import nProgress from "nprogress";
-import { cardFilterOptions } from "../../lib/config";
-import { GET_CARDS_BY_STATUS } from "../../graphql/query/card-query";
-import { useAccount } from "../../lib/context/account-context";
+import { cardFilterOptions } from "../../../lib/config";
+import { GET_CARDS_BY_STATUS } from "../../../graphql/query/card-query";
 
 const CardList = () => {
   const [filter, setFilter] = useState('all');
   const navigate = useNavigate();
   const location = useLocation();
-  const {userType} = useAccount();
   const [getCards,{
     data: cardList,
     loading: fetchCardList,
     error: fetchCardError,
     refetch: cardRefetch
-  }] = useLazyQuery(GET_CARDS_BY_HOTEL_GROUP,{
-    variables: {
-      hotelGroup:userType
-    }
-  });
+  }] = useLazyQuery(GET_CARDS);
   const [pagination, setPagination] = useState(1);
   const itemsPerPage = 5;
 
@@ -36,13 +30,11 @@ const CardList = () => {
     }
   }, [location.state, cardRefetch]);
 
-  console.log(filter)
 
   const [getCardsByStatus,{data:cardListByStatus,loading:fetchCardListByStatus}] = useLazyQuery(GET_CARDS_BY_STATUS)
   const cardLists = cardList ? cardList.cards : [];
-  console.log(cardLists)
 
-  const column = cardColumn(navigate,pagination,itemsPerPage);
+  const column = masterAdminCardColumn(navigate,pagination,itemsPerPage);
   
   useEffect(() => {
     if(filter === '' || filter === 'all'){
@@ -93,8 +85,8 @@ const CardList = () => {
           </div>
           <div className="h-12">
             <button
-              className="bg-primary hover:border-green-500 text-white duration-500 hover:bg-gray-900 hover:text-white"
-              onClick={() => navigate("cardlists/createcard")}
+              className="bg-primary hover:border-green-500 text-white duration-500 hover:bg-primarybold"
+              onClick={() => navigate("/masteradmindashboard/card/createcard")}
             >
               New
             </button>

@@ -1,68 +1,58 @@
 import { useEffect, useState } from "react";
-import CustomTable from "../common/components/custom-table";
-import { cardColumn} from "../common/components/custom-table/columns";
-import CustomFilter from "../common/components/custom-filter";
+import CustomTable from "../../common/components/custom-table";
+import { masterAdminUserColumn, userColumn } from "../../common/components/custom-table/columns";
+import CustomFilter from "../../common/components/custom-filter";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery,useLazyQuery } from "@apollo/client";
-import { GET_CARDS, GET_CARDS_BY_HOTEL_GROUP} from "../../graphql/query/card-query";
 import nProgress from "nprogress";
-import { cardFilterOptions } from "../../lib/config";
-import { GET_CARDS_BY_STATUS } from "../../graphql/query/card-query";
-import { useAccount } from "../../lib/context/account-context";
+import { customerFilterOptions } from "../../../lib/config";
+import { GET_CUSTOMERS, GET_CUSTOMERS_BY_STATUS } from "../../../graphql/query/customer-query";
 
-const CardList = () => {
+const AdminUserList = () => {
   const [filter, setFilter] = useState('all');
   const navigate = useNavigate();
   const location = useLocation();
-  const {userType} = useAccount();
-  const [getCards,{
-    data: cardList,
-    loading: fetchCardList,
-    error: fetchCardError,
-    refetch: cardRefetch
-  }] = useLazyQuery(GET_CARDS_BY_HOTEL_GROUP,{
-    variables: {
-      hotelGroup:userType
-    }
-  });
+  const [getCustomers,{
+    data: customerList,
+    loading: fetchCustomerList,
+    error: fetchCustomerError,
+    refetch: customerRefetch
+  }] = useLazyQuery(GET_CUSTOMERS);
   const [pagination, setPagination] = useState(1);
   const itemsPerPage = 5;
 
+
   useEffect(() => {
     if (location.state?.refetch) {
-      cardRefetch().then(() => {
-        navigate('/dashboard/card', { state: {} });
-      });
+      customerRefetch();
     }
-  }, [location.state, cardRefetch]);
+  }, [location.state, customerRefetch]);
 
-  console.log(filter)
 
-  const [getCardsByStatus,{data:cardListByStatus,loading:fetchCardListByStatus}] = useLazyQuery(GET_CARDS_BY_STATUS)
-  const cardLists = cardList ? cardList.cards : [];
-  console.log(cardLists)
+  const [getCustomersByStatus,{data:customerListByStatus,loading:fetchCustomerListByStatus}] = useLazyQuery(GET_CUSTOMERS_BY_STATUS)
+  const customerLists = customerList ? customerList.customers : [];
 
-  const column = cardColumn(navigate,pagination,itemsPerPage);
+  const column = masterAdminUserColumn(navigate,pagination,itemsPerPage);
   
   useEffect(() => {
     if(filter === '' || filter === 'all'){
-        getCards();
+        getCustomers();
     }else if(filter === 'enable'){
-       getCardsByStatus({
+       getCustomersByStatus({
         variables:{disabled:false}
        })
     }
     else{
-        getCardsByStatus({
+        getCustomersByStatus({
             variables:{disabled:true}
            })
     }
-  },[filter,getCards,getCardsByStatus])
+  },[filter,getCustomers,getCustomersByStatus])
 
-  const tableData = filter === '' || filter === 'all' ?(cardList? cardList.cards: []):(cardListByStatus? cardListByStatus.cards:[])
+  const tableData = filter === '' || filter === 'all' ?(customerList? customerList.customers: []):(customerListByStatus? customerListByStatus.customers:[])
 
   useEffect(() => {
-    if (fetchCardList) {
+    if (fetchCustomerList) {
       nProgress.configure({
         parent: "#progress-bar-container",
         showSpinner: false,
@@ -75,7 +65,7 @@ const CardList = () => {
     return () => {
         nProgress.done();
     };
-  }, [fetchCardList, fetchCardError]);
+  }, [fetchCustomerList, fetchCustomerError]);
 
   return (
     <div className="w-full flex flex-col gap-4 pr-5 pl-5">
@@ -89,20 +79,20 @@ const CardList = () => {
         </div> */}
         <div className="flex flex-row items-center gap-8">
           <div className="">
-            <CustomFilter setOptions={setFilter} option={cardFilterOptions} filter={filter}/>
+            <CustomFilter setOptions={setFilter} option={customerFilterOptions} filter={filter}/>
           </div>
           <div className="h-12">
             <button
               className="bg-primary hover:border-green-500 text-white duration-500 hover:bg-gray-900 hover:text-white"
-              onClick={() => navigate("cardlists/createcard")}
+              onClick={() => navigate("/masteradmindashboard/customer/createcustomer")}
             >
               New
             </button>
           </div>
         </div>
       </div>
-      <CustomTable column={column} tableData={tableData} setPaginationProps={setPagination}/>
+      <CustomTable column={column} tableData={tableData} setPaginationProps={setPagination} />
     </div>
   );
 };
-export default CardList;
+export default AdminUserList;

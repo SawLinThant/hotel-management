@@ -1,8 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { SidebarRoutes } from "../../../lib/config";
+import { MasterAdminSidebarRoutes, SidebarRoutes } from "../../../lib/config";
+import { useAccount } from "../../../lib/context/account-context";
 
 const Sidebar = () => {
     const navigate = useNavigate();
+    const {userType} = useAccount();
+    const route = userType === "admin" ? MasterAdminSidebarRoutes : SidebarRoutes;
     return(
         <aside className="fixed top-0 left-0 lg:h-screen lg:w-[17vw] z-10 bg-gradient-to-b from-primary to-primarybold  text-white md:hidden lg:block">
             <div className="w-full h-full flex flex-col pl-5 pr-5 pt0">
@@ -19,10 +22,16 @@ const Sidebar = () => {
                     </div>
                 </div>
                 <div className="w-full flex flex-col gap-2 pt-4 pb-4">
-                    {SidebarRoutes.map((route) => {
+                    {route.map((route) => {
                         return(
                             <div 
-                            onClick={() => navigate(route.path,{ state: { refetch: true } })}
+                            onClick={() => {
+                                if (userType === "admin") {
+                                    navigate(`/masteradmindashboard/${route.path}`, { state: { refetch: true } });
+                                } else {
+                                    navigate(`/dashboard/${route.path}`, { state: { refetch: true } });
+                                }
+                            }}
                             className="w-full h-12 flex flex-row items-center gap-4 pl-6 duration-10 hover:border hover:cursor-pointer hover:rounded-lg hover:border-white">
                                 <div className="">{route.icon}</div>
                                 <p className="">{route.label}</p>

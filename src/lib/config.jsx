@@ -58,6 +58,51 @@ export const SidebarRoutes = [
     },
 ]
 
+export const MasterAdminSidebarRoutes = [
+    {
+        id: 'customer',
+        label: 'Customer',
+        path: 'user',
+        icon: <FaUserGroup size={20}/>
+    },
+    {
+        id: 'terminal',
+        label: 'Terminal',
+        path: 'terminal',
+        icon: <BsFillTerminalFill size={20}/>
+    },
+    {
+        id: 'transaction',
+        label: 'Transaction',
+        path: 'cardtransaction',
+        icon: <GrTransaction size={20}/>
+    },
+    {
+        id: 'card',
+        label: 'Card',
+        path: 'card',
+        icon: <CiCreditCard1 size={20}/>
+    },
+    {
+        id: 'facility',
+        label: 'Business Unit',
+        path: 'facility',
+        icon: <GrServicePlay size={20}/>
+    },
+    {
+        id: 'facilityservice',
+        label: 'Service Package',
+        path: 'facilityservice',
+        icon: <GrServicePlay size={20}/>
+    },
+    {
+        id: 'cashinamount',
+        label: 'Cash In Amount',
+        path: 'cashinamount',
+        icon: <SiCashapp size={20}/>
+    },
+]
+
 export const customerFilterOptions = [
     {
         value: "all",
