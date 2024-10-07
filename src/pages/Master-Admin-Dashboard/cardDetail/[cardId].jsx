@@ -159,7 +159,7 @@ const CardDetail = () => {
                       type="text"
                       disabled={true}
                       name="balance"
-                      value={!cardData.customer?"Unregistered": cardData.balance.toLocaleString()}
+                      value={!cardData.customer?"0": cardData.balance.toLocaleString()}
                       placeholder={!cardData.customer?"Unregistered": cardData.balance.toLocaleString()}
                       onChange={handleInputChange}
                     />

@@ -1,17 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import InputField from "../../common/components/input-field";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_CARD } from "../../../graphql/mutation/card-mutation";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import LoadingButton from "../../common/icon/loading-icon";
 import toast, { Toaster } from "react-hot-toast";
 import bcrypt from 'bcryptjs';
 import { useAccount } from "../../../lib/context/account-context";
+import { GET_HOTEL_GROUP } from "../../../graphql/query/hotel-group";
+import CustomDropdown from "../../common/components/custom-dropdown";
 
 const CreateCard = () => {
   const navigate = useNavigate();
   const {userType} = useAccount();
+  const [hotelGroup, setHotelGroup] = useState();
+  const [hotelGroupOptions, setHotelGroupOptions] = useState();
   const {
     register: cardRegister,
     handleSubmit: createCardSubmit,
@@ -20,13 +24,24 @@ const CreateCard = () => {
   const [createCard, { loading: createCardLoading }] =
     useMutation(CREATE_CARD);
 
+    const { data: getHotelGroup, loading: fetchHotelGroup } =
+    useQuery(GET_HOTEL_GROUP);
+  useEffect(() => {
+    if (getHotelGroup && getHotelGroup.hotel_groups) {
+      setHotelGroupOptions(getHotelGroup.hotel_groups);
+    }
+  }, [getHotelGroup]);
+
   const handleCreateCard = createCardSubmit(async (credentials) => {
+    if (!hotelGroup || hotelGroup.length < 0) {
+      toast.error("Please select hotel group");
+    } else {
       try {
         await createCard({
           variables: {
             card_number: credentials.card_number,
             card_password: "",
-            hotel_group: userType,
+            hotel_group: hotelGroup,
           },
         });
         toast.success("Card created successfully");
@@ -35,7 +50,7 @@ const CreateCard = () => {
         toast.error("Cannot Create Card");
         console.error("Error creating card:", err);
       }
-    
+    }
   });
 
   return (
@@ -54,7 +69,7 @@ const CreateCard = () => {
             action=""
           >
             <div className="w-full h-full grid grid-cols-1 gap-4">
-              <div className="flex flex-col items-start gap-2 pb-4">
+              <div className="flex flex-col min-h-[13rem] items-start gap-2 pb-4">
                 <InputField
                   label="CardNumber"
                   name="card_number"
@@ -63,6 +78,14 @@ const CreateCard = () => {
                   fullSize={true}
                   require={cardRegister}
                 />
+                 <div className="w-full mt-2 relative">
+                  <CustomDropdown
+                    label="Select Hotel Group"
+                    options={hotelGroupOptions}
+                    setOption={setHotelGroup}
+                    isOptionValue={false}
+                  />
+                </div>
               </div>
             </div>
             <div className="h-12 w-full flex flow-row gap-4 items-center justify-between">

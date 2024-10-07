@@ -10,10 +10,13 @@ import { GET_FACILITIES, GET_FACILITIES_BY_HOTEL_GROUP } from "../../../graphql/
 import { CREATE_TERMINAL } from "../../../graphql/mutation/terminal-mutation";
 import bcrypt from "bcryptjs";
 import { useAccount } from "../../../lib/context/account-context";
+import { GET_HOTEL_GROUP } from "../../../graphql/query/hotel-group";
 
 const CreateTerminal = () => {
   const navigate = useNavigate();
   const {userType} = useAccount();
+  const [hotelGroup, setHotelGroup] = useState();
+  const [hotelGroupOptions, setHotelGroupOptions] = useState();
   const [facility, setFacility] = useState();
   const [facilityOptions, setFacilityOptions] = useState();
   const {
@@ -28,7 +31,7 @@ const CreateTerminal = () => {
     data: getFacility,
     loading: fetchFacility,
     error: fetchFacilityError,
-  } = useQuery(GET_FACILITIES_BY_HOTEL_GROUP,{
+  } = useQuery(GET_FACILITIES,{
     variables: {
       hotelGroup:userType
     }
@@ -40,13 +43,22 @@ const CreateTerminal = () => {
     }
   }, [getFacility]);
 
+  const {data:getHotelGroup,loading:fetchHotelGroup} = useQuery(GET_HOTEL_GROUP);
+  useEffect(() => {
+    if (getHotelGroup && getHotelGroup.hotel_groups) {
+      setHotelGroupOptions(getHotelGroup.hotel_groups);
+    }
+  }, [getHotelGroup]);
+
   const handleCreateFacility = createTerminalSubmit(async (credentials) => {
     if (credentials.password !== credentials.confirm_password) {
       toast.error("Please confirm password");
     }
     else if(!facility || facility.length<0){
        toast.error("Please choose facility")
-    }
+    }else if(!hotelGroup || hotelGroup.length < 0){
+      toast.error("Please select hotel group")
+    } 
     else {
       try {
         const hashedPassword = await bcrypt.hash(credentials.password, 10);
@@ -55,7 +67,7 @@ const CreateTerminal = () => {
             terminal_number: credentials.terminal_number,
             password: hashedPassword,
             facility_id: facility,
-            hotel_group: userType
+            hotel_group: hotelGroup
           },
         });
         toast.success("Terminal created successfully");
@@ -83,7 +95,7 @@ const CreateTerminal = () => {
             action=""
           >
             <div className="w-full h-full grid grid-cols-2 gap-4">
-              <div className="flex flex-col items-start gap-2 pb-4">
+              <div className="flex flex-col min-h-[20rem] items-start gap-2 pb-4">
                 <InputField
                   label="Terminal Number"
                   name="terminal_number"
@@ -99,6 +111,14 @@ const CreateTerminal = () => {
                   inputType="password"
                   require={terminalRegister}
                 />
+                <div className="w-3/4 mt-2 relative">
+                  <CustomDropdown
+                    label="Select Hotel Group"
+                    options={hotelGroupOptions}
+                    setOption={setHotelGroup}
+                    isOptionValue={false}
+                  />
+                </div>
               </div>
               <div className="flex flex-col items-start gap-2 pb-4">
                 <InputField

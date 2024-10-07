@@ -1,17 +1,21 @@
 import { useNavigate } from "react-router-dom";
 import InputField from "../../common/components/input-field";
-import { useMutation } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import { CREATE_CUSTOMER } from "../../../graphql/mutation/customer-mutation";
 import { useForm } from "react-hook-form";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import LoadingButton from "../../common/icon/loading-icon";
 import toast, { Toaster } from "react-hot-toast";
 import { useAccount } from "../../../lib/context/account-context";
+import CustomDropdown from "../../common/components/custom-dropdown";
+import { GET_HOTEL_GROUP } from "../../../graphql/query/hotel-group";
 
 const CreateUser = () => {
   const navigate = useNavigate();
   const {userType} = useAccount();
   const [uniquePassword, setUniquePassword] = useState();
+  const [hotelGroup, setHotelGroup] = useState();
+  const [hotelGroupOptions, setHotelGroupOptions] = useState();
   const {
     register: customerRegister,
     handleSubmit: createCustomerSubmit,
@@ -19,6 +23,14 @@ const CreateUser = () => {
   } = useForm();
   const [createCustomer, { loading: createCustomerLoading }] =
     useMutation(CREATE_CUSTOMER);
+
+    const {data:getHotelGroup,loading:fetchHotelGroup} = useQuery(GET_HOTEL_GROUP);
+
+    useEffect(() => {
+      if (getHotelGroup && getHotelGroup.hotel_groups) {
+        setHotelGroupOptions(getHotelGroup.hotel_groups);
+      }
+    }, [getHotelGroup]);
 
   const handleCreateUser = createCustomerSubmit(async (credentials) => {
     if (credentials.password !== credentials.confirm_password) {
@@ -32,7 +44,7 @@ const CreateUser = () => {
             email: credentials.email,
             disabled: false,
             unique_password: "",
-            hotel_group: userType
+            hotel_group: hotelGroup
           },
         });
         toast.success("Customer created successfully");
@@ -115,6 +127,14 @@ const CreateUser = () => {
                   inputType="email"
                   require={customerRegister}
                 />
+                 <div className="w-3/4 mt-2 relative">
+                  <CustomDropdown
+                    label="Select Hotel Group"
+                    options={hotelGroupOptions}
+                    setOption={setHotelGroup}
+                    isOptionValue={false}
+                  />
+                </div>
               </div>
             </div>
             <div className="h-12 w-full flex flow-row gap-4 items-center justify-start">

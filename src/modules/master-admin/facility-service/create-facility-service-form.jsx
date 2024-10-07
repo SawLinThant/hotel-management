@@ -9,10 +9,13 @@ import CustomDropdown from "../../common/components/custom-dropdown";
 import { GET_FACILITIES, GET_FACILITIES_BY_HOTEL_GROUP } from "../../../graphql/query/facilities-query";
 import { CREATE_FACILITY_SERVICE } from "../../../graphql/mutation/facility-service-mutation";
 import { useAccount } from "../../../lib/context/account-context";
+import { GET_HOTEL_GROUP } from "../../../graphql/query/hotel-group";
 
 const CreateFacilityService = () => {
   const navigate = useNavigate();
   const {userType} = useAccount();
+  const [hotelGroup, setHotelGroup] = useState();
+  const [hotelGroupOptions, setHotelGroupOptions] = useState();
   const [facility, setFacility] = useState();
   const [facilityOptions, setFacilityOptions] = useState();
   const {
@@ -27,11 +30,18 @@ const CreateFacilityService = () => {
     data: getFacility,
     loading: fetchFacility,
     error: fetchFacilityError,
-  } = useQuery(GET_FACILITIES_BY_HOTEL_GROUP,{
+  } = useQuery(GET_FACILITIES,{
     variables: {
       hotelGroup:userType
     }
   });
+
+  const {data:getHotelGroup,loading:fetchHotelGroup} = useQuery(GET_HOTEL_GROUP);
+  useEffect(() => {
+    if (getHotelGroup && getHotelGroup.hotel_groups) {
+      setHotelGroupOptions(getHotelGroup.hotel_groups);
+    }
+  }, [getHotelGroup]);
 
   useEffect(() => {
     if (getFacility && getFacility.facilities) {
@@ -43,14 +53,17 @@ const CreateFacilityService = () => {
     async (credentials) => {
       if (!facility || facility.length < 0) {
         toast.error("Please choose facility");
-      } else {
+      }else if(!hotelGroup || hotelGroup.length < 0){
+        toast.error("Please select hotel group")
+      }   
+      else {
         try {
           await createFacilityService({
             variables: {
               name: credentials.name,
               price: credentials.price,
               facility_id: facility,
-              hotel_group: userType,
+              hotel_group: hotelGroup,
             },
           });
           toast.success("Service created successfully");
@@ -88,22 +101,31 @@ const CreateFacilityService = () => {
                   fullSize={false}
                   require={facilityServiceRegister}
                 />
-                <InputField
+                <div className="w-3/4 mt-2 relative">
+                  <CustomDropdown
+                    label="Select Hotel Group"
+                    options={hotelGroupOptions}
+                    setOption={setHotelGroup}
+                    isOptionValue={false}
+                  />
+                </div>
+               
+              </div>
+              <div className="flex flex-col min-h-[13rem] items-start gap-2 pb-4">
+              <InputField
                   label="Price"
                   name="price"
                   placeholder="Enter price"
                   inputType="number"
                   require={facilityServiceRegister}
                 />
-              </div>
-              <div className="flex flex-col items-start gap-2 pb-4">
                 <div className="w-3/4 mt-2 relative">
                   <CustomDropdown
                     label="Select Facility"
                     options={facilityOptions}
                     setOption={setFacility}
                   />
-                </div>
+                </div>             
               </div>
             </div>
             <div className="h-12 w-full flex flow-row gap-4 items-center justify-start">
