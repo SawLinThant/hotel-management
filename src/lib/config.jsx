@@ -163,10 +163,14 @@ export const terminalFilterOptions = [
     },
 ]
 
-export const Theme = [
-    {
-        hotel:"GR",
-        primary:"#2058d8",
-        primarybold:"#0d3287"
-    }
-]
+export const Logo = {
+    admin:{
+        'logo': '/admin.png'
+    },
+    GR:{
+        'logo': '/gr-logo.png'
+    },
+    Axra:{
+        'logo': '/axra.png'
+    },
+}

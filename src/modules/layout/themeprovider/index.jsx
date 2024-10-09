@@ -15,8 +15,8 @@ const ThemeProvider = ({children}) => {
           '--color-primary-bold': '#061d51', // RoyalBlue
         },
         Axra: {
-          '--color-primary': '#665e29', // LimeGreen
-          '--color-primary-bold': '#228B22', // ForestGreen
+          '--color-primary': '#681762', // LimeGreen
+          '--color-primary-bold': '#40103d', // ForestGreen
         },
       };
       const selectedTheme = themes[theme] || themes['admin'];
