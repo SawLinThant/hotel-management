@@ -7,8 +7,8 @@ export default {
   theme: {
     extend: {
       colors:{
-        primary:"#3a4c54",
-        primarybold:"#201c1c"
+        primary: "var(--color-primary)",
+        primarybold: "var(--color-primary-bold)",
       },
       width:{
         "dashboard-main-content":'calc(100% - 17vw)'

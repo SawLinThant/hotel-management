@@ -94,7 +94,7 @@ const TerminalList = () => {
           </div>
           <div className="h-12">
             <button
-              className="bg-primary hover:border-green-500 text-white duration-500 hover:bg-gray-900 hover:text-white"
+              className="bg-primary hover:border-green-500 text-white duration-500  hover:bg-primarybold hover:text-white"
               onClick={() => navigate("terminallists/createterminal")}
             >
               New

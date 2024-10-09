@@ -6,17 +6,21 @@ import { BrowserRouter } from "react-router-dom";
 import createApolloClient from "./graphql/apolloClient.js";
 import { ApolloProvider } from "@apollo/client";
 import { AccountProvider } from "./lib/context/account-context.jsx";
+import ThemeProvider from "./modules/layout/themeprovider/index.jsx";
+import { Theme } from "./lib/config.jsx";
 
 const apolloClient = createApolloClient();
 
 createRoot(document.getElementById("root")).render(
   <ApolloProvider client={apolloClient}>
-  <StrictMode>
-    <BrowserRouter>
-    <AccountProvider>
-      <App />
-    </AccountProvider>
-    </BrowserRouter>
-  </StrictMode>
+    <StrictMode>
+        <BrowserRouter>
+          <AccountProvider>
+            <ThemeProvider>
+            <App />
+            </ThemeProvider>
+          </AccountProvider>
+        </BrowserRouter>
+    </StrictMode>
   </ApolloProvider>
 );

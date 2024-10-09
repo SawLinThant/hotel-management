@@ -6,6 +6,7 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import MasterAdminDashboard from "./pages/Master-Admin-Dashboard";
 import { useAccount } from "./lib/context/account-context";
+import ThemeProvider from "./modules/layout/themeprovider";
 
 function App() {
   const { userType } = useAccount();
@@ -32,13 +33,15 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />}></Route>
           <Route path="register" element={<Register />}></Route>
+          
           <Route element={<ProtectedRoute />}>
             {/* This will be the normal user dashboard */}
             <Route path="dashboard/*" element={<Dashboard />} />
           </Route>
           <Route path="masteradmindashboard/*" element={<MasterAdminDashboard />} />
+          
         </Routes>
-      </div>
+      </div>  
     </>
   );
 }

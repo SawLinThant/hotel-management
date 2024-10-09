@@ -162,3 +162,11 @@ export const terminalFilterOptions = [
         label: "Enable"
     },
 ]
+
+export const Theme = [
+    {
+        hotel:"GR",
+        primary:"#2058d8",
+        primarybold:"#0d3287"
+    }
+]
