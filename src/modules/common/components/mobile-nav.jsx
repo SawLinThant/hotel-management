@@ -1,6 +1,6 @@
 import clsx from "clsx"
 import { RxCross1 } from "react-icons/rx";
-import { MasterAdminSidebarRoutes, SidebarRoutes } from "../../../lib/config";
+import { Logo, MasterAdminSidebarRoutes, SidebarRoutes } from "../../../lib/config";
 import { useNavigate } from "react-router-dom";
 import { SlLogout } from "react-icons/sl";
 import { useAccount } from "../../../lib/context/account-context";
@@ -8,9 +8,10 @@ import { useAccount } from "../../../lib/context/account-context";
 const MobileNav = ({isCollapse=true,setIsCollapse}) => {
     const navigate = useNavigate();
     const {userType} = useAccount();
+    const logo = Logo[userType];
     const routes = userType === "admin" ? MasterAdminSidebarRoutes : SidebarRoutes;
     return(
-        <div className={clsx("md:w-[100vw] md:min-h-[30vh] lg:hidden z-50 absolute transition-all duration-700 top-0  bg-gradient-to-b from-blue-900 to-gray-800 border-b rounded-b-lg p-4 flex flex-col gap-6",{
+        <div className={clsx("md:w-[100vw] md:min-h-[30vh] lg:hidden z-50 absolute transition-all duration-700 top-0  bg-gradient-to-b from-primary to-primarybold border-b rounded-b-lg p-4 flex flex-col gap-6",{
             "translate-y-[-150%]":isCollapse,
             "translate-y-[0%]":!isCollapse
         })}>
@@ -42,7 +43,11 @@ const MobileNav = ({isCollapse=true,setIsCollapse}) => {
                 <div className="col-span-2 rounded-md border-2 border-white grid grid-cols-1 px-4">
                     <div className="w-full h-[10rem] border-b border-white flex items-center justify-center">
                         <div className="w-20 h-20 rounded-full overflow-hidden border border-white">
-                            <img className="object-cover max-w-full max-h-full" src="/gr-logo.png" alt="" />
+                            <img 
+                            className="object-cover max-w-full max-h-full" 
+                            src={logo.logo} 
+                            alt="logo" 
+                            />
                         </div>
                     </div>
                     <div className="w-full h-4 flex items-center justify-center">
