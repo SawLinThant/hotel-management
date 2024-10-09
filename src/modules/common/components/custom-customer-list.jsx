@@ -1,14 +1,16 @@
 import { useQuery } from "@apollo/client";
-import clsx from "clsx";
-import { FaUserAlt } from "react-icons/fa";
-import { GET_CUSTOMERS_CREATED_LAST_SEVEN_DAYS, GET_CUSTOMERS_CREATED_TODAY } from "../../../graphql/query/customer-query";
+import { GET_CUSTOMERS_CREATED_TODAY } from "../../../graphql/query/customer-query";
 import { useLocation } from "react-router-dom";
 import { useEffect } from "react";
+import { useAccount } from "../../../lib/context/account-context";
 
 const CustomCustomerList = () => { 
   const location = useLocation();
+  const {userType} = useAccount();
   const { data: dailyCustomer, loading: dailyCustomerLoading, refetch:refetchdailyCustomer } =
-    useQuery(GET_CUSTOMERS_CREATED_TODAY);
+    useQuery(GET_CUSTOMERS_CREATED_TODAY,{
+      variables:{userType}
+    });
   const dailyCustomerLists = dailyCustomer
     ? dailyCustomer.customers
     : [];

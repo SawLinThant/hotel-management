@@ -1,13 +1,19 @@
 import { useQuery } from "@apollo/client";
 import { Doughnut } from "react-chartjs-2";
 import { Chart, ArcElement, Tooltip, Legend } from "chart.js";
-import { GET_CARDS_TRANSACTION } from "../../../graphql/query/card-transaction-query";
+import { GET_CARDS_TRANSACTION, GET_CARDS_TRANSACTION_BY_HOTEL_GROUP } from "../../../graphql/query/card-transaction-query";
 import { useEffect, useState } from "react";
+import { useAccount } from "../../../lib/context/account-context";
 
 Chart.register(ArcElement, Tooltip, Legend);
 
 const TrasnactionDoughnutChart = () => {
-    const {data:cardTransactionList,loading:fetchTransaction, error:transactionError} = useQuery(GET_CARDS_TRANSACTION);
+  const {userType} = useAccount();
+    const {data:cardTransactionList,loading:fetchTransaction, error:transactionError} = useQuery(GET_CARDS_TRANSACTION_BY_HOTEL_GROUP,{
+      variables: {
+        hotelGroup:userType
+      }
+    });
     const transactions = cardTransactionList? cardTransactionList.card_transactions: [];
     const summary = transactions .reduce(
         (acc,transaction) => {

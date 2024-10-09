@@ -117,9 +117,12 @@ export const GET_CUSTOMERS_CREATED_LAST_SEVEN_DAYS = gql`
 `;
 
 export const GET_CUSTOMERS_CREATED_TODAY = gql`
-  query getCustomer {
+  query getCustomer($hotelGroup: String!) {
     customers(
-      where: { created_at: { _gte: "${today}" } }
+      where: {
+        created_at: { _gte: "${today}" }
+        hotel_group: { _eq: $hotelGroup }
+      }
       order_by: { created_at: desc }
     ) {
       id
@@ -130,6 +133,7 @@ export const GET_CUSTOMERS_CREATED_TODAY = gql`
       updated_at
       disabled
       unique_password
+      hotel_group
     }
   }
 `;
