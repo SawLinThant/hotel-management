@@ -157,7 +157,7 @@ const CardTransactionList = () => {
           </div>
           <div className="h-12">
             <button
-              className="bg-green-600 hover:border-green-500 text-white duration-500 hover:bg-green-400 hover:text-gray-800"
+              className="bg-primary hover:border-green-500 text-white duration-500 hover:bg-primarybold hover:text-gray-800"
               onClick={() => exportCsv(tableData)}
             >
               Export
