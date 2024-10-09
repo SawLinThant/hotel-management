@@ -11,9 +11,10 @@ import CustomFilter from "./custom-filter";
 import { transactionFilterOptions } from "../../../lib/config";
 import { useLocation } from "react-router-dom";
 import { useAccount } from "../../../lib/context/account-context";
-const {userType} = useAccount();
+
 
 const CustomTransctionList = () => {
+  const {userType} = useAccount();
   const [transactionLists, setTransactionLists] = useState([]);
   const location = useLocation();
   const [filter, setFilter] = useState("");

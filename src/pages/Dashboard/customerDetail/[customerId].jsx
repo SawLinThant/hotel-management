@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../../modules/common/components/input-field";
 import { useForm } from "react-hook-form";
 import { FaArrowLeft } from "react-icons/fa";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { GET_CUSTOMERS_BY_ID } from "../../../graphql/query/customer-query";
 import { useEffect, useState } from "react";
 import CustomDropdown from "../../../modules/common/components/custom-dropdown";
@@ -12,10 +12,13 @@ import LoadingButton from "../../../modules/common/icon/loading-icon";
 import { UPDATE_CUSTOMER_BY_ID } from "../../../graphql/mutation/customer-mutation";
 import { CARD_REGISTER } from "../../../graphql/mutation/card-mutation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { GET_CARDS_BY_CARD_NUMBER } from "../../../graphql/query/card-query";
+import { useAccount } from "../../../lib/context/account-context";
 
 const CustomerDetail = () => {
   const { customerId } = useParams();
   const navigate = useNavigate();
+  const {userType} = useAccount();
   const [isEdit, setisEdit] = useState(false);
   const [isRegister, setIsregister] = useState(false);
   const [isAmountVisible, setIsAmountVisible] = useState({});
@@ -34,6 +37,8 @@ const CustomerDetail = () => {
       variables: { id: customerId },
     }
   );
+
+  const [getCardByNumber, { data: getCardByNumberData, loading: fetchingCard }] = useLazyQuery(GET_CARDS_BY_CARD_NUMBER);
 
   const toggleVisibility = (cardId) => {
     setIsAmountVisible((prevState) => ({
@@ -120,6 +125,11 @@ const CustomerDetail = () => {
   };
 
   const handleCardRegister = cardRegisterSubmit(async (credentials) => {
+    getCardByNumber({
+      variables: { cardNumber: credentials.card_number },
+    });
+    const cardData = getCardByNumberData?.cards[0];
+    console.log(cardData)
     if (credentials.card_password !== credentials.confirm_password) {
       toast.error("Please Confirm Password");
     } else if (credentials.card_number.length > 6) {
@@ -130,6 +140,9 @@ const CustomerDetail = () => {
       credentials.card_password.length < 4
     ) {
       toast.error("Password should contain 4 numbers");
+    }else if (cardData && cardData.hotel_group !== userType) {
+      toast.error("Invalid Card Number");
+      return;
     } else {
       try {
         await cardRegisters({

@@ -37,16 +37,26 @@ const CardList = () => {
   const column = masterAdminCardColumn(navigate,pagination,itemsPerPage);
   
   useEffect(() => {
+    nProgress.start();
     if(filter === '' || filter === 'all'){
-        getCards();
+        getCards()
+        .finally(() =>{
+          nProgress.done();
+        });
     }else if(filter === 'enable'){
        getCardsByStatus({
         variables:{disabled:false}
+       })
+       .finally(() => {
+        nProgress.done();
        })
     }
     else{
         getCardsByStatus({
             variables:{disabled:true}
+           })
+           .finally(() => {
+            nProgress.done();
            })
     }
   },[filter,getCards,getCardsByStatus])

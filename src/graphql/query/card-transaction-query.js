@@ -143,6 +143,40 @@ export const GET_CARDS_TRANSACTION_BY_TYPE = gql`
   }
 `;
 
+export const GET_CARDS_TRANSACTION_BY_TYPE_AND_HOTEL_GROUP = gql`
+  query getCardTransactionByTypeAndHotelGroup($transactionType: String!, $hotel_group: String!) {
+    card_transactions(
+      where: {
+        card_transaction_type: { _eq: $transactionType },
+        card: { hotel_group: { _eq: $hotel_group } }
+      }
+      order_by: { created_at: desc }
+    ) {
+      id
+      transaction_number
+      amount
+      terminal_id
+      card_id
+      card_transaction_type
+      created_at
+      updated_at
+      card {
+        id
+        card_number
+        hotel_group
+        customer {
+          id
+          name
+        }
+      }
+      terminal {
+        terminal_number
+      }
+    }
+  }
+`;
+
+
 export const GET_CARDS_TRANSACTION_BY_CARD_NUMBER = gql`
   query getCardTransactionByCardNumber($card_number: String!) {
     card_transactions(where: { card: { card_number: { _eq: $card_number } } }) {
@@ -169,7 +203,44 @@ export const GET_CARDS_TRANSACTION_BY_CARD_NUMBER = gql`
       }
     }
   }
-`
+`;
+
+export const GET_CARDS_TRANSACTION_BY_CARD_NUMBER_BY_HOTEL_GROUP = gql`
+  query getCardTransactionByCardNumber($card_number: String!, $hotel_group: String!) {
+    card_transactions(
+      where: { 
+        card: { 
+          card_number: { _eq: $card_number }, 
+          hotel_group: { _eq: $hotel_group } 
+        } 
+      }
+    ) {
+      id
+      transaction_number
+      amount
+      terminal_id
+      card_id
+      card_transaction_type
+      created_at
+      updated_at
+      card {
+        card_number
+        hotel_group
+        customer {
+          id
+          name
+        }
+      }
+      cardTransactionTypeByCardTransactionType {
+        name
+      }
+      terminal {
+        terminal_number
+      }
+    }
+  }
+`;
+
 
 export const GET_CARDS_TRANSACTION_TODAY = gql`
   query getCardTransactionToday($hotelGroup: String!) {

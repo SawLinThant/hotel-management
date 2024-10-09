@@ -4,11 +4,12 @@ import { cardColumn} from "../common/components/custom-table/columns";
 import CustomFilter from "../common/components/custom-filter";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useQuery,useLazyQuery } from "@apollo/client";
-import { GET_CARDS, GET_CARDS_BY_HOTEL_GROUP} from "../../graphql/query/card-query";
+import { GET_CARDS, GET_CARDS_BY_HOTEL_GROUP, GET_CARDS_BY_STATUS_AND_HOTEL_GROUP} from "../../graphql/query/card-query";
 import nProgress from "nprogress";
 import { cardFilterOptions } from "../../lib/config";
 import { GET_CARDS_BY_STATUS } from "../../graphql/query/card-query";
 import { useAccount } from "../../lib/context/account-context";
+import nprogress from "nprogress";
 
 const CardList = () => {
   const [filter, setFilter] = useState('all');
@@ -38,23 +39,39 @@ const CardList = () => {
 
   console.log(filter)
 
-  const [getCardsByStatus,{data:cardListByStatus,loading:fetchCardListByStatus}] = useLazyQuery(GET_CARDS_BY_STATUS)
+  const [getCardsByStatus,{data:cardListByStatus,loading:fetchCardListByStatus}] = useLazyQuery(GET_CARDS_BY_STATUS_AND_HOTEL_GROUP)
   const cardLists = cardList ? cardList.cards : [];
   console.log(cardLists)
 
   const column = cardColumn(navigate,pagination,itemsPerPage);
   
   useEffect(() => {
+    nProgress.start();
     if(filter === '' || filter === 'all'){
-        getCards();
+        getCards()
+        .finally(() =>{
+          nProgress.done();
+        });
     }else if(filter === 'enable'){
        getCardsByStatus({
-        variables:{disabled:false}
+        variables:{
+          disabled:false,
+          hotel_group: userType
+        }
+       })
+       .finally(() => {
+        nProgress.done();
        })
     }
     else{
         getCardsByStatus({
-            variables:{disabled:true}
+          variables:{
+            disabled:true,
+            hotel_group: userType
+          }
+           })
+           .finally(() => {
+            nProgress.done();
            })
     }
   },[filter,getCards,getCardsByStatus])

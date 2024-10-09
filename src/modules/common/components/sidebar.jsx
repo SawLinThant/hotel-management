@@ -16,7 +16,7 @@ const Sidebar = () => {
                             <div className="flex justify-center items-center w-14 h-14 rounded-full border overflow-hidden border-white">
                                 <img className="object-cover max-w-full max-h-full" src="/gr-logo.png" alt="logo" />
                                 </div>
-                        <h2 className="text-xl font-semibold">Hotel Yangon</h2>
+                        <h2 className="text-xl font-semibold">{userType==="admin"?"Admin":`${userType} Hotel`}</h2>
                         </div>
                        
                     </div>

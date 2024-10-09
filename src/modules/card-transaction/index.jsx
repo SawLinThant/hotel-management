@@ -4,7 +4,7 @@ import { cardTransactionColumn } from "../common/components/custom-table/columns
 import { useLocation, useNavigate } from "react-router-dom";
 import { useLazyQuery, useQuery } from "@apollo/client";
 import nProgress from "nprogress";
-import { GET_CARDS_TRANSACTION, GET_CARDS_TRANSACTION_BY_CARD_NUMBER, GET_CARDS_TRANSACTION_BY_HOTEL_GROUP, GET_CARDS_TRANSACTION_BY_TYPE } from "../../graphql/query/card-transaction-query";
+import { GET_CARDS_TRANSACTION, GET_CARDS_TRANSACTION_BY_CARD_NUMBER, GET_CARDS_TRANSACTION_BY_CARD_NUMBER_BY_HOTEL_GROUP, GET_CARDS_TRANSACTION_BY_HOTEL_GROUP, GET_CARDS_TRANSACTION_BY_TYPE, GET_CARDS_TRANSACTION_BY_TYPE_AND_HOTEL_GROUP } from "../../graphql/query/card-transaction-query";
 import CustomFilter from "../common/components/custom-filter";
 import { transactionFilterOptions } from "../../lib/config";
 import toast, { Toaster } from "react-hot-toast";
@@ -33,9 +33,9 @@ const CardTransactionList = () => {
   const [getTransactionByCardNumber, {
     data: transactionByCardNumber,
     loading: fetchTransactionByCardNumber,
-  }] = useLazyQuery(GET_CARDS_TRANSACTION_BY_CARD_NUMBER);
+  }] = useLazyQuery(GET_CARDS_TRANSACTION_BY_CARD_NUMBER_BY_HOTEL_GROUP);
 
-  const [getTransactionByType,{data:transactionListByType,loading:fetchTransactionListByType}] = useLazyQuery(GET_CARDS_TRANSACTION_BY_TYPE)
+  const [getTransactionByType,{data:transactionListByType,loading:fetchTransactionListByType}] = useLazyQuery(GET_CARDS_TRANSACTION_BY_TYPE_AND_HOTEL_GROUP)
 
   const fetchCardTransaction = () => {
     nProgress.start();
@@ -50,7 +50,10 @@ const CardTransactionList = () => {
       })
     }else{
       getTransactionByType({
-        variables:{transactionType:filter}
+        variables:{
+          transactionType:filter,
+          hotel_group: userType
+        }
        })
        .then((response) => {
         setCardNumberSearch('');
@@ -108,7 +111,10 @@ const CardTransactionList = () => {
       setFilter("");
       nProgress.start();
       getTransactionByCardNumber({
-        variables: { card_number: cardNumberSearch }
+        variables: { 
+          card_number: cardNumberSearch ,
+          hotel_group: userType
+        }
       })
         .then((response) => {
           setTableData(response.data.card_transactions || []);
