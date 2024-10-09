@@ -5,6 +5,7 @@ export const SIGN_IN_MUTATION = gql`
     staffLogin(username: $username, password: $password) {
       token
       message
+      hotel_group
     }
   }
 `;

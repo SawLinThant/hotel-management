@@ -1,12 +1,14 @@
 import clsx from "clsx"
 import { RxCross1 } from "react-icons/rx";
-import { SidebarRoutes } from "../../../lib/config";
+import { MasterAdminSidebarRoutes, SidebarRoutes } from "../../../lib/config";
 import { useNavigate } from "react-router-dom";
 import { SlLogout } from "react-icons/sl";
+import { useAccount } from "../../../lib/context/account-context";
 
 const MobileNav = ({isCollapse=true,setIsCollapse}) => {
     const navigate = useNavigate();
-
+    const {userType} = useAccount();
+    const routes = userType === "admin" ? MasterAdminSidebarRoutes : SidebarRoutes;
     return(
         <div className={clsx("md:w-[100vw] md:min-h-[30vh] lg:hidden z-50 absolute transition-all duration-700 top-0  bg-gradient-to-b from-blue-900 to-gray-800 border-b rounded-b-lg p-4 flex flex-col gap-6",{
             "translate-y-[-150%]":isCollapse,
@@ -25,7 +27,7 @@ const MobileNav = ({isCollapse=true,setIsCollapse}) => {
             </div>
             <div className="w-full h-full p-4 grid grid-cols-6 gap-4">
                 <div className="col-span-4 min-h-[15rem] border-2 rounded-md border-white grid grid-cols-2">
-                    {SidebarRoutes.map((route) => {
+                    {routes.map((route) => {
                         return(
                             <div 
                             key={route.id}

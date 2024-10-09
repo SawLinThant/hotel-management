@@ -8,21 +8,19 @@ import MasterAdminDashboard from "./pages/Master-Admin-Dashboard";
 import { useAccount } from "./lib/context/account-context";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const { userType } = useAccount();
 
   const ProtectedRoute = () => {
-    const { userType } = useAccount();
     // if (!localStorage.getItem("token")) {
     //   return <Navigate to="/" />;
     // }
-
-    // Route to master admin dashboard if user is admin
+    console.log(userType)
+    // Check the userType to redirect appropriately
     if (userType === "admin") {
       return <Navigate to="/masteradmindashboard" />;
     }
 
-    // Otherwise, return the regular dashboard
-    return <Outlet />;
+    return <Outlet />; // Render the Outlet for normal users
   };
 
   return (
@@ -34,19 +32,11 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />}></Route>
           <Route path="register" element={<Register />}></Route>
-          {/* <Route element={<ProtectedRoute/>}>
-           
-        </Route> */}
-          <Route path="dashboard/*" element={<Dashboard />}></Route>
-        <Route path="masteradmindashboard/*" element={<MasterAdminDashboard />}></Route>
-          {/* <Route element={<ProtectedRoute />}>
+          <Route element={<ProtectedRoute />}>
+            {/* This will be the normal user dashboard */}
             <Route path="dashboard/*" element={<Dashboard />} />
-
-            <Route
-              path="masteradmindashboard/*"
-              element={<MasterAdminDashboard />}
-            />
-          </Route> */}
+          </Route>
+          <Route path="masteradmindashboard/*" element={<MasterAdminDashboard />} />
         </Routes>
       </div>
     </>

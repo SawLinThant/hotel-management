@@ -122,7 +122,7 @@ const TerminalDetail = () => {
             <div className="w-full h-full flex flex-col gap-4">
               <div className="w-full h-[4rem] flex flex-row items-center p-4 justify-between rounded-t rounded-tr bg-gradient-to-r from-primary to-primarybold">
                 <button
-                  onClick={() => navigate("/dashboard/terminal",{ state: { refetch: true } })}
+                  onClick={() => navigate("/masteradmindashboard/terminal",{ state: { refetch: true } })}
                   className="bg-transparent"
                 >
                   <FaArrowLeft size={20} color="white" />

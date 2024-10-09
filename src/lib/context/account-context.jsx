@@ -3,10 +3,14 @@ import { createContext, useContext, useState } from "react";
 const AccountContext = createContext();
 
 export const AccountProvider = ({children}) => {
-   const [userType,setUserType] = useState("admin");
+   const [userType,setUserType] = useState(() => {
+    const savedUserType = localStorage.getItem("userType");
+    return savedUserType || "admin"
+   });
 
    const SetUserType = ((userType) => {
     setUserType(userType);
+    localStorage.setItem("userType",userType)
    })
 
    return(

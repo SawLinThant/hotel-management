@@ -5,15 +5,22 @@ import { SIGN_IN_MUTATION } from "../graphql/mutation/sign-in-mutation";
 import { Link, useNavigate } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
 import LoadingButton from "../modules/common/icon/loading-icon";
+import { useAccount } from "../lib/context/account-context";
 
 const Login = () => {
   const navigate = useNavigate();
+  const {SetUserType} = useAccount();
   const { register: loginRegister, handleSubmit: handleLoginSubmit } =
     useForm();
   const [staffLogin, { loading: loginLoading, error: loginError }] =
     useMutation(SIGN_IN_MUTATION, {
       onCompleted: (data) => {
         const token = data.staffLogin.token;
+        const userType = data.staffLogin.hotel_group;
+        console.log(data)
+        if(userType){
+          SetUserType(userType);
+        }
         if (token) {
           localStorage.setItem("token", token);
           navigate("/dashboard");

@@ -62,7 +62,7 @@ export const MasterAdminSidebarRoutes = [
     {
         id: 'customer',
         label: 'Customer',
-        path: 'user',
+        path: 'customer',
         icon: <FaUserGroup size={20}/>
     },
     {

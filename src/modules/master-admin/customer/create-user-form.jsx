@@ -147,7 +147,7 @@ const CreateUser = () => {
               <button
                 type="button"
                 onClick={() =>
-                  navigate("/dashboard/user", { state: { refetch: true } })
+                  navigate("/masteradmindashboard/customer", { state: { refetch: true } })
                 }
                 className=" transition min-w-28 duration-500 border-primary text-white from-primary to-primarybold rounded font-light bg-gradient-to-l"
               >

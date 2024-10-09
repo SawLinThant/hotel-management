@@ -25,7 +25,7 @@ const CardList = () => {
   useEffect(() => {
     if (location.state?.refetch) {
       cardRefetch().then(() => {
-        navigate('/dashboard/card', { state: {} });
+        navigate('/masteradmindashboard/card', { state: {} });
       });
     }
   }, [location.state, cardRefetch]);
