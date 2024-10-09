@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import InputField from "../../../modules/common/components/input-field";
 import { useForm } from "react-hook-form";
 import { FaArrowLeft } from "react-icons/fa";
-import { useQuery, useMutation } from "@apollo/client";
+import { useQuery, useMutation, useLazyQuery } from "@apollo/client";
 import { GET_CUSTOMERS_BY_ID } from "../../../graphql/query/customer-query";
 import { useEffect, useState } from "react";
 import CustomDropdown from "../../../modules/common/components/custom-dropdown";
@@ -12,6 +12,7 @@ import LoadingButton from "../../../modules/common/icon/loading-icon";
 import { UPDATE_CUSTOMER_BY_ID } from "../../../graphql/mutation/customer-mutation";
 import { CARD_REGISTER } from "../../../graphql/mutation/card-mutation";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { GET_CARDS_BY_CARD_NUMBER } from "../../../graphql/query/card-query";
 
 const CustomerDetail = () => {
   const { customerId } = useParams();
@@ -19,6 +20,7 @@ const CustomerDetail = () => {
   const [isEdit, setisEdit] = useState(false);
   const [isRegister, setIsregister] = useState(false);
   const [isAmountVisible, setIsAmountVisible] = useState({});
+  const [registerLoading,setRegisterLoading] = useState(false);
   const [
     cardRegisters,
     { loading: cardRegisterLoading, error: cardRegisterError },
@@ -47,8 +49,6 @@ const CustomerDetail = () => {
       ? getCustomerbyId.customers[0].cards
       : [];
 
-  console.log(cards);
-
   const [customerData, setCustomerData] = useState({
     id: "",
     name: "",
@@ -58,7 +58,7 @@ const CustomerDetail = () => {
     created_at: "",
     updated_at: "",
     disabled: "",
-    hotel_group:"",
+    hotel_group: "",
     unique_password: "",
     cards: {
       id: "",
@@ -98,6 +98,11 @@ const CustomerDetail = () => {
     UPDATE_CUSTOMER_BY_ID
   );
 
+  const [
+    getCardByNumber,
+    { data: getCardByNumberData, loading: fetchingCard },
+  ] = useLazyQuery(GET_CARDS_BY_CARD_NUMBER);
+
   const handleUpdate = async (e) => {
     e.preventDefault();
     console.log(customerData);
@@ -109,7 +114,7 @@ const CustomerDetail = () => {
           phone: customerData.phone,
           email: customerData.email,
           disabled: customerData.disabled,
-          hotel_group: customerData.hotel_group
+          hotel_group: customerData.hotel_group,
         },
       });
       toast.success("Saved changes");
@@ -131,24 +136,46 @@ const CustomerDetail = () => {
     ) {
       toast.error("Password should contain 4 numbers");
     } else {
-      try {
-        await cardRegisters({
-          variables: {
-            card_number: credentials.card_number.toString(),
-            card_password: credentials.card_password,
-            customer_id: customerId,
-          },
-        });
-        toast.success("Card added");
-        cardRegisterReset();
-      } catch (error) {
-        console.log("error registering card");
-        toast.error("Enable to register");
-      }
+      setRegisterLoading(true)
+      getCardByNumber({
+        variables: { cardNumber: credentials.card_number },
+      }).then((data) => {
+        const cardData = data?.data?.cards[0];
+        if (!cardData) {
+          toast.error("Card not found");
+          return;
+        }
+        if (cardData.hotel_group !== customerData.hotel_group) {
+          toast.error("Hotel group does not match.");
+          return;
+        }
+        try {
+          cardRegisters({
+            variables: {
+              card_number: credentials.card_number.toString(),
+              card_password: credentials.card_password,
+              customer_id: customerId,
+            },
+          });
+          toast.success("Card added");
+          cardRegisterReset();
+        } catch (error) {
+          console.log("error registering card");
+          toast.error("Enable to register");
+        }
+      })
+      .finally(() =>{
+        setRegisterLoading(false);
+      })
     }
   });
 
-  if (fetchCustomerbyId) return <div className="w-full h-[50vh] flex items-center justify-center">Loading</div>;
+  if (fetchCustomerbyId)
+    return (
+      <div className="w-full h-[50vh] flex items-center justify-center">
+        Loading
+      </div>
+    );
 
   return (
     <div className="w-full flex flex-col gap-4 pr-5 pl-5 text-primary">
@@ -159,7 +186,11 @@ const CustomerDetail = () => {
             <div className="w-full h-full flex flex-col gap-4">
               <div className="w-full h-[4rem] flex flex-row items-center p-4 justify-between rounded-t rounded-tr bg-gradient-to-r from-primary to-primarybold">
                 <button
-                  onClick={() => navigate("/masteradmindashboard/customer",{ state: { refetch: true } })}
+                  onClick={() =>
+                    navigate("/masteradmindashboard/customer", {
+                      state: { refetch: true },
+                    })
+                  }
                   className="bg-transparent"
                 >
                   <FaArrowLeft size={20} color="white" />
@@ -244,27 +275,27 @@ const CustomerDetail = () => {
                     />
                   </div>
                   <div className="w-full h-auto grid grid-cols-2">
-                      <div>
-                        <p className="text-left mt-2 ml-3 font-semibold">
-                          Created Time:
-                        </p>
-                      </div>
-                      <input
-                        className={clsx(
-                          "w-full border-none text-black focus:outline-none rounded p-2",
-                          // {
-                          //   "border-transparent": isEdit,
-                          //   "border-transparent": !isEdit,
-                          // }
-                        )}
-                        type="text"
-                        disabled={true}
-                        name="created_at"
-                        value={formattedDate || ""}
-                        placeholder={formattedDate || ""}
-                        onChange={handleInputChange}
-                      />
+                    <div>
+                      <p className="text-left mt-2 ml-3 font-semibold">
+                        Created Time:
+                      </p>
                     </div>
+                    <input
+                      className={clsx(
+                        "w-full border-none text-black focus:outline-none rounded p-2"
+                        // {
+                        //   "border-transparent": isEdit,
+                        //   "border-transparent": !isEdit,
+                        // }
+                      )}
+                      type="text"
+                      disabled={true}
+                      name="created_at"
+                      value={formattedDate || ""}
+                      placeholder={formattedDate || ""}
+                      onChange={handleInputChange}
+                    />
+                  </div>
                   {isEdit ? (
                     <div className="w-full grid grid-cols-2">
                       <div className="flex flex-row items-center gap-2">
@@ -411,7 +442,7 @@ const CustomerDetail = () => {
                         type="submit"
                         className="w-full h-full flex flex-row items-center justify-center text-white bg-gradient-to-r from-primary to-primarybold"
                       >
-                        {cardRegisterLoading ? (
+                        {registerLoading ? (
                           <LoadingButton size={20} />
                         ) : (
                           "Register"

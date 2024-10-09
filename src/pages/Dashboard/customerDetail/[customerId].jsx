@@ -22,6 +22,7 @@ const CustomerDetail = () => {
   const [isEdit, setisEdit] = useState(false);
   const [isRegister, setIsregister] = useState(false);
   const [isAmountVisible, setIsAmountVisible] = useState({});
+  const [registerLoading,setRegisterLoading] = useState(false);
   const [
     cardRegisters,
     { loading: cardRegisterLoading, error: cardRegisterError },
@@ -125,11 +126,6 @@ const CustomerDetail = () => {
   };
 
   const handleCardRegister = cardRegisterSubmit(async (credentials) => {
-    getCardByNumber({
-      variables: { cardNumber: credentials.card_number },
-    });
-    const cardData = getCardByNumberData?.cards[0];
-    console.log(cardData)
     if (credentials.card_password !== credentials.confirm_password) {
       toast.error("Please Confirm Password");
     } else if (credentials.card_number.length > 6) {
@@ -140,24 +136,38 @@ const CustomerDetail = () => {
       credentials.card_password.length < 4
     ) {
       toast.error("Password should contain 4 numbers");
-    }else if (cardData && cardData.hotel_group !== userType) {
-      toast.error("Invalid Card Number");
-      return;
     } else {
-      try {
-        await cardRegisters({
-          variables: {
-            card_number: credentials.card_number.toString(),
-            card_password: credentials.card_password,
-            customer_id: customerId,
-          },
-        });
-        toast.success("Card added");
-        cardRegisterReset();
-      } catch (error) {
-        console.log("error registering card");
-        toast.error("Enable to register");
-      }
+      setRegisterLoading(true)
+      getCardByNumber({
+        variables: { cardNumber: credentials.card_number },
+      }).then((data) => {
+        const cardData = data?.data?.cards[0];
+        if (!cardData) {
+          toast.error("Card not found");
+          return;
+        }
+        if (cardData.hotel_group !== customerData.hotel_group) {
+          toast.error("Invalid Card");
+          return;
+        }
+        try {
+          cardRegisters({
+            variables: {
+              card_number: credentials.card_number.toString(),
+              card_password: credentials.card_password,
+              customer_id: customerId,
+            },
+          });
+          toast.success("Card added");
+          cardRegisterReset();
+        } catch (error) {
+          console.log("error registering card");
+          toast.error("Enable to register");
+        }
+      })
+      .finally(() =>{
+        setRegisterLoading(false);
+      })
     }
   });
 
@@ -424,7 +434,7 @@ const CustomerDetail = () => {
                         type="submit"
                         className="w-full h-full flex flex-row items-center justify-center text-white bg-gradient-to-r from-primary to-primarybold"
                       >
-                        {cardRegisterLoading ? (
+                        {registerLoading ? (
                           <LoadingButton size={20} />
                         ) : (
                           "Register"
