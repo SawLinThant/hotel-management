@@ -29,9 +29,10 @@ const httpLink = createHttpLink({
         return {
           headers: {
             ...headers,
-            Authorization: token ? `Bearer ${token}` : "", 
-            "x-hasura-admin-secret":
-            import.meta.env.VITE_APP_HASURA_ADMIN_SECRET,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+            // Authorization: token ? `Bearer ${token}` : "", 
+            // "x-hasura-admin-secret":
+            // import.meta.env.VITE_APP_HASURA_ADMIN_SECRET,
           },
         };
       } catch (e) {

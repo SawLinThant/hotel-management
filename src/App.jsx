@@ -38,8 +38,7 @@ function App() {
             {/* This will be the normal user dashboard */}
             <Route path="dashboard/*" element={<Dashboard />} />
           </Route>
-          <Route path="masteradmindashboard/*" element={<MasterAdminDashboard />} />
-          
+          <Route path="masteradmindashboard/*" element={<MasterAdminDashboard />} />          
         </Routes>
       </div>  
     </>
